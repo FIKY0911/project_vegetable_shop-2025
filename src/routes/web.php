@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
@@ -19,3 +21,4 @@ Livewire::setScriptRoute(function ($handle) {
 Route::get('/', function () {
     return view('welcome');
 });
+

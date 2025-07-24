@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Resources\ProductTransactionResource;
+use App\Filament\Admin\Widgets\ProductChart;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -21,6 +23,13 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use App\Filament\Admin\Widgets\TotalProductStat;
+use App\Filament\Admin\Widgets\ProductStockOverview;
+use App\Filament\Admin\Widgets\TotalTransaction;
+use App\Filament\Admin\Widgets\TransactionChart;
+use App\Filament\Admin\Widgets\GraphChart;
+use Illuminate\Support\Facades\Auth;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->spa()
+            ->brandName('Admin Vegetable Shop')
             ->login()
             ->passwordReset()
             ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
@@ -50,6 +60,10 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 \Awcodes\Overlook\Widgets\OverlookWidget::class,
+                TotalProductStat::class,
+                ProductStockOverview::class,
+                TotalTransaction::class,
+                GraphChart::class,
             ])
             ->navigationGroups([
                 NavigationGroup::make()
@@ -57,7 +71,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label(fn () => auth()->user()->name)
+                    ->label(fn () => Auth::user()->name)
                     ->url(fn (): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
                 // 'profile' => \Filament\Navigation\MenuItem::make()
