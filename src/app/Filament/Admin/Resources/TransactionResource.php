@@ -46,14 +46,13 @@ class TransactionResource extends Resource
                         $set('sub_total', ($product?->price ?? 0) * $state);
                     })
                     ->numeric(),
-                Forms\Components\TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->prefix('$'),
                 Forms\Components\TextInput::make('sub_total')
                     ->label('Sub Total')
                     ->disabled()
                     ->dehydrated()
+                    ->numeric(),
+                Forms\Components\TextInput::make('price')
+                    ->required()
                     ->numeric(),
                 Forms\Components\DatePicker::make('transaction_date')
                     ->required(),
@@ -64,22 +63,23 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('customer_id')
+                Tables\Columns\TextColumn::make('customer.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('product_id')
+                Tables\Columns\TextColumn::make('product.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_type'),
                 Tables\Columns\TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('price')
-                    ->money()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('price')
+                //     ->money()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('sub_total')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->prefix('Rp. '),
                 Tables\Columns\TextColumn::make('transaction_date')
                     ->date()
                     ->sortable(),

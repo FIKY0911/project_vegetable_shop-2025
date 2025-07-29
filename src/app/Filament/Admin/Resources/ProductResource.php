@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,11 +24,6 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('customer_id')
-                    ->label('Customer')
-                    ->relationship('customer', 'name')
-                    ->searchable()
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -58,9 +54,6 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('customer.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('category.name')
@@ -70,8 +63,11 @@ class ProductResource extends Resource
                     ->money()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stock')
-                    ->numeric()
-                    ->sortable(),
+                    // ->numeric()
+                    // ->sortable(),
+                    ->badge()
+                    ->color(fn ($state) => $state == 0 ? 'danger' : 'success')
+                    ->formatStateUsing(fn ($state) => $state == 0 ? 'Habis' : $state),
                 Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\IconColumn::make('is_active')
@@ -86,7 +82,10 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Filter::make('Stok Kosong')
+                ->query(fn ($query) => $query->where('stock', 0))
+                ->label('Stok Kosong')
+                ->indicator('Stok Habis'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

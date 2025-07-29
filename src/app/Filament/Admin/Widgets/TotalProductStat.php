@@ -27,8 +27,14 @@ class TotalProductStat extends BaseWidget
 
             Card::make('Stok Kosong', $query->where('stock', 0)->count())
                 ->description('Produk yang kehabisan stok')
+                ->description('Klik untuk lihat produk habis')
                 ->color('danger')
-                ->icon('heroicon-o-exclamation-triangle'),
+                ->icon('heroicon-o-exclamation-triangle')
+                ->url(route('filament.admin.resources.products.index', [
+                    'tableFilters' => [
+                        'Stok Kosong' => true,
+                    ],
+                ]), shouldOpenInNewTab: false),
         ];
     }
 }

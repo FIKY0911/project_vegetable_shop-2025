@@ -15,7 +15,6 @@ class Product extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'customer_id',
         'category_id',
         'name',
         'price',
@@ -25,13 +24,14 @@ class Product extends Model
         'is_active',
     ];
 
+    public function isStockAvailable(int $quantity): bool
+    {
+        return $this->stock >= $quantity;
+    }
+
     /**
      * Relasi: Produk dimiliki oleh satu Customer
      */
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class);
-    }
 
     public function category(): BelongsTo
     {
